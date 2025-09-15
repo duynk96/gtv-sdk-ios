@@ -8,8 +8,8 @@ class SplashViewController: UIViewController {
         if let image = UIImage(named: "splash_logo") {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFit
-            let imageWidth: CGFloat = 200
-            let imageHeight: CGFloat = 200
+            let imageWidth: CGFloat = 60
+            let imageHeight: CGFloat = 60
             imageView.frame = CGRect(
                 x: (view.bounds.width - imageWidth)/2,
                 y: (view.bounds.height - imageHeight)/2,

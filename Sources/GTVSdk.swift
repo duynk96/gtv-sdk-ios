@@ -35,6 +35,8 @@ public class GTVSdk {
         hostVC.present(nav, animated: true, completion: nil)
     }
     
+    
+    
     public func getTokenApp() -> String? {
         return SessionManager.shared.getToken()
     }
@@ -94,4 +96,14 @@ public class GTVSdk {
             }
         }
     }
+    
+    public func attachWarning18Plus(to parent: UIViewController) {
+            let warningVC = WarningViewController()
+            warningVC.view.frame = parent.view.bounds
+            warningVC.view.backgroundColor = .clear
+
+            parent.addChild(warningVC)
+            parent.view.addSubview(warningVC.view)
+            warningVC.didMove(toParent: parent)
+        }
 }
