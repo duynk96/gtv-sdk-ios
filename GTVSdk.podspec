@@ -15,7 +15,6 @@ Pod::Spec.new do |s|
 
   # Source code
   s.source_files = 'Sources/**/*.{swift,h,m}'
-  s.resources    = ['Resources/**/*.{xcassets,storyboard,xib}']
 
   # Dependencies
 end
