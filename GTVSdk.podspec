@@ -7,10 +7,12 @@ Pod::Spec.new do |s|
   DESC
   s.homepage         = 'https://github.com/duynk96/gtv-sdk-ios'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Your Name' => 'you@email.com' }
+   s.author          = { 'duynk96' => 'you@email.com' }
   s.source           = { :git => 'https://github.com/duynk96/gtv-sdk-ios.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '13.0'
+  s.swift_versions   = ['5.0', '5.5', '5.9']
+  
   s.static_framework = true
 
   # Source code
