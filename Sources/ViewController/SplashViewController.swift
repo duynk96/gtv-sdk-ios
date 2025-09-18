@@ -5,11 +5,11 @@ class SplashViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        if let image = UIImage(named: "splash_logo") {
+        if let image = UIImage(named: "ic_sdk_splash", in: .gtvSdk, compatibleWith: nil) {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFit
-            let imageWidth: CGFloat = 60
-            let imageHeight: CGFloat = 60
+            let imageWidth: CGFloat = 100
+            let imageHeight: CGFloat = 100
             imageView.frame = CGRect(
                 x: (view.bounds.width - imageWidth)/2,
                 y: (view.bounds.height - imageHeight)/2,
