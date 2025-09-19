@@ -62,18 +62,32 @@ class FloatingButton: UIButton {
             break
         }
     }
-
+    
+    @objc private func logoutTapped() {
+        // Gọi SDK logout
+        GTVSdk.shared.logout()
+        hidePopup()
+    }
     
     private func showPopup() {
         guard let window = UIApplication.shared.keyWindow else { return }
-
+        
         let popupHeight: CGFloat = 300
         let popup = UIView(frame: CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: popupHeight))
-        popup.backgroundColor = .red
+        popup.backgroundColor = .gray
         popup.layer.cornerRadius = 16
         window.addSubview(popup)
         self.popupView = popup
-
+        
+        let logoutButton = UIButton(type: .system)
+        logoutButton.setTitle("Logout", for: .normal)
+        logoutButton.frame = CGRect(x: 20, y: 20, width: popup.frame.width - 40, height: 50)
+        logoutButton.backgroundColor = .red
+        logoutButton.setTitleColor(.white, for: .normal)
+        logoutButton.layer.cornerRadius = 8
+        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
+        popup.addSubview(logoutButton)
+        
         UIView.animate(withDuration: 0.3) {
             popup.frame.origin.y = window.frame.height - popupHeight
         }

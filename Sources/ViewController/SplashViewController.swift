@@ -8,8 +8,8 @@ class SplashViewController: UIViewController {
         if let image = UIImage(named: "ic_sdk_splash", in: .gtvSdk, compatibleWith: nil) {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFit
-            let imageWidth: CGFloat = 100
-            let imageHeight: CGFloat = 100
+            let imageWidth: CGFloat = 200
+            let imageHeight: CGFloat = 200
             imageView.frame = CGRect(
                 x: (view.bounds.width - imageWidth)/2,
                 y: (view.bounds.height - imageHeight)/2,

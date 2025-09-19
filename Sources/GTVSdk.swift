@@ -4,16 +4,11 @@ private class BundleFinder {}
 
 extension Bundle {
     static var gtvSdk: Bundle = {
-        // Bundle chứa resource bundle
         let bundle = Bundle(for: BundleFinder.self)
-
-        // Tìm file GTVSdkResources.bundle
         if let url = bundle.url(forResource: "GTVSdkResources", withExtension: "bundle"),
            let resourceBundle = Bundle(url: url) {
             return resourceBundle
         }
-
-        // Nếu không tìm thấy, fallback về main bundle (trường hợp debug)
         return bundle
     }()
 }
@@ -24,23 +19,44 @@ public protocol GTVSdkListener: AnyObject {
 
 public enum GTVEvents {
     public static let LOGIN_SUCCESS = "GTVLoginSuccess"
-}
+    public static let LOGOUT_SUCCESS = "GTVLogoutSuccess"
+
+    public static let AD_LOADED = "GTVAdLoaded"
+    public static let AD_FAILED = "GTVFailed"
+    public static let AD_CLOSED = "GTVClosed"
+    public static let REWARD_EARNED = "GTVRewardEarned"
+    
+    public static let PURCHASE_UPDATED = "GTVPurchaseUpdated"   // data: List<Purchase>
+    public static let BILLING_ERROR = "GTVBillingError"         // data: Int (errorCode)
+    public static let BILLING_CONNECTED = "GTVBillingConnected"
+    public static let BILLING_DISCONNECTED = "GTVBillingDisconnected"
+    public static let PURCHASE_CONSUMED = "GTVPurchaseConsumed"
+    public static let PURCHASE_ACKNOWLEDGED = "GTVPurchaseAcknowledged"
+    public static let PURCHASES_RESTORED = "GTVPurchaseRestored"}
 
 
 public class GTVSdk {
+    
     public static let shared = GTVSdk()
+    
+    // ENV
     public let urlString = "https://accounts.gplaydev.com"
     
-    private init() {}
-    
+    // UI
     private var floatingButton: FloatingButton?
     private var warningButton: WarningButton?
-    
     private weak var listener: GTVSdkListener?
     
-    public func initSdk(clientId: String, adjustToken: String, isDebug: Bool, admobID: String) {
+    public func initSdk(clientId: String, adjustToken: String, environmentAdjust: String, admobID: String) {
         SessionManager.shared.saveClientId(clientId)
-        // FirebaseManager.shared.configure()
+        FirebaseManager.shared.initFirebase()
+        AdmobManager.shared.initAdmob(admobID: admobID)
+        AdjustManager.shared.initAdjust(appToken: adjustToken, env: environmentAdjust)
+    }
+    
+    public func logout() {
+        SessionManager.shared.clearToken()
+        dispatchEvent(event: GTVEvents.LOGOUT_SUCCESS, data: nil)
     }
     
     public func setListener(_ listener: GTVSdkListener) {
@@ -51,11 +67,52 @@ public class GTVSdk {
         listener?.onEventReceived(event: event, data: data)
     }
     
-    public func showSplash(from hostVC: UIViewController) {
+    public func purchaseProduct(productId: String) async {
+        if !IAPManager.shared.products.contains(where: { $0.id == productId }) {
+            await IAPManager.shared.queryProducts(identifiers: [productId])
+        }
+        await IAPManager.shared.purchase(productId: productId)
+    }
+    
+    public func restorePurchases() {
+        Task {
+            await IAPManager.shared.restorePurchases()
+        }
+    }
+    
+    public func showRewarded(from viewController: UIViewController) {
+        AdmobManager.shared.showRewarded(from: viewController)
+    }
+    
+    public func trackAdjustEvent(
+           token: String,
+           parameters: [String: String]? = nil,
+           amount: Double? = nil,
+           currency: String? = nil
+       ) {
+           AdjustManager.shared.trackEvent(
+               token: token,
+               parameters: parameters,
+               amount: amount,
+               currency: currency
+           )
+       }
+    
+    public func showSplash() {
         let splashVC = SplashViewController()
         let nav = UINavigationController(rootViewController: splashVC)
-        nav.modalPresentationStyle = .fullScreen
-        hostVC.present(nav, animated: true, completion: nil)
+        if let window = UIApplication.shared.windows.first {
+            window.rootViewController = nav
+            window.makeKeyAndVisible()
+        }
+    }
+
+    
+    public func showLogin() {
+        let loginVC = LoginViewController()
+        let nav = UINavigationController(rootViewController: loginVC)
+        UIApplication.shared.windows.first?.rootViewController = nav
+        UIApplication.shared.windows.first?.makeKeyAndVisible()
     }
     
     public func getTokenApp() -> String {

@@ -43,13 +43,11 @@ public class WarningButton: UIButton {
         self.updateState(.normal, animated: false)
     }
 
-    /// Toggle trạng thái khi bấm
     @objc private func toggleState() {
         let nextState: WarningButtonState = currentState == .normal ? .full : .normal
         self.updateState(nextState, animated: true)
     }
 
-    /// Cập nhật trạng thái với optional animation
     public func updateState(_ state: WarningButtonState, animated: Bool = false) {
         self.currentState = state
         let newImage = (state == .normal) ? normalImage : fullImage
@@ -67,7 +65,6 @@ public class WarningButton: UIButton {
         }
     }
 
-    /// Update vị trí mà không thay đổi kích thước
     public func updatePosition(_ origin: CGPoint) {
         self.frame.origin = origin
     }
