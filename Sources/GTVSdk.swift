@@ -32,7 +32,8 @@ public enum GTVEvents {
     public static let BILLING_DISCONNECTED = "GTVBillingDisconnected"
     public static let PURCHASE_CONSUMED = "GTVPurchaseConsumed"
     public static let PURCHASE_ACKNOWLEDGED = "GTVPurchaseAcknowledged"
-    public static let PURCHASES_RESTORED = "GTVPurchaseRestored"}
+    public static let PURCHASES_RESTORED = "GTVPurchaseRestored"
+}
 
 
 public class GTVSdk {
@@ -233,7 +234,7 @@ public class GTVSdk {
             if warningButton == nil {
                 let b = WarningButton(
                     normalImage: UIImage(named: "ic_sdk_warning", in: .gtvSdk, compatibleWith: nil),       fullImage: UIImage(named: "ic_sdk_warning_full", in: .gtvSdk, compatibleWith: nil),
-                    normalSize: CGSize(width: 60, height: 60),
+                    normalSize: CGSize(width: 40, height: 40),
                     fullSize: CGSize(width: 150, height: 60),
                     origin: origin
                 )

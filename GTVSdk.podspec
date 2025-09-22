@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'GTVSdk'
-    s.version          = '1.0.3'
+    s.version          = '1.0.5'
     s.summary          = 'GTV SDK cho iOS'
     s.description      = <<-DESC
     SDK hỗ trợ login, notification, tracking và quảng cáo cho ứng dụng iOS.
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
     }
      
     # Dependencies (Firebase sẽ tự thêm resource bundle của nó)
-    s.dependency 'Firebase/Messaging'
-    s.dependency 'Google-Mobile-Ads-SDK'
-    s.dependency 'Adjust'
+    s.dependency 'Firebase/Messaging', '~> 12.3.0'
+    s.dependency 'Google-Mobile-Ads-SDK', '~> 12.11.0'
+    s.dependency 'Adjust', '~> 5.4.4'
 end

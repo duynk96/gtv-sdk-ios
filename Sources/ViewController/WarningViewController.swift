@@ -30,7 +30,7 @@ public class WarningButton: UIButton {
     }
 
     required init?(coder: NSCoder) {
-        self.normalSize = CGSize(width: 60, height: 60)
+        self.normalSize = CGSize(width: 40, height: 40)
         self.fullSize = CGSize(width: 120, height: 120)
         super.init(coder: coder)
         self.setup()

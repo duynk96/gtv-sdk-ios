@@ -26,8 +26,12 @@ class FirebaseManager: NSObject {
         else {
             print("❌ GoogleService-Info.plist not found in host app bundle or SDK bundle")
         }
+        
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        registerForPushNotifications()
     }
-
+    
     private func registerForPushNotifications() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
             if granted {
@@ -37,15 +41,35 @@ class FirebaseManager: NSObject {
             }
         }
     }
+    
+    func subscribeTopic(_ topic: String) {
+        Messaging.messaging().subscribe(toTopic: topic) { error in
+            if let error = error {
+                print("❌ Failed to subscribe to topic \(topic): \(error.localizedDescription)")
+            } else {
+                print("✅ Subscribed to topic: \(topic)")
+            }
+        }
+    }
+    
+    func unsubscribeTopic(_ topic: String) {
+        Messaging.messaging().unsubscribe(fromTopic: topic) { error in
+            if let error = error {
+                print("❌ Failed to unsubscribe from topic \(topic): \(error.localizedDescription)")
+            } else {
+                print("✅ Unsubscribed from topic: \(topic)")
+            }
+        }
+    }
 }
+
 
 // MARK: - MessagingDelegate
 extension FirebaseManager: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         guard let token = fcmToken else { return }
-        print("📩 Received FCM Token: \(token)")
-        
-        // 👉 Dispatch sự kiện ra ngoài SDK
+        let clientId = SessionManager.shared.getClientId()
+        self.subscribeTopic("games-\(clientId)")
         // GTVSdk.shared.dispatchEvent(event: GTVEvents.FCM_TOKEN, data: token)
     }
 }
@@ -59,7 +83,7 @@ extension FirebaseManager: UNUserNotificationCenterDelegate {
         print("📩 Foreground notification: \(userInfo)")
 
         // GTVSdk.shared.dispatchEvent(event: GTVEvents.NOTIFICATION_RECEIVED, data: userInfo)
-        // completionHandler([.banner, .sound, .badge])
+        completionHandler([.banner, .sound, .badge])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter,
